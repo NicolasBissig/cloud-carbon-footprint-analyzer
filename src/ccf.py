@@ -21,6 +21,9 @@ def prepare_estimates(estimates: pd.DataFrame) -> pd.DataFrame:
     normalized = normalized.drop('serviceEstimates', axis='columns')
     return normalized
 
+def filter_estimates(estimates: pd.DataFrame, column: str, value) -> pd.DataFrame:
+    return estimates[estimates[column] == value]
+
 def unique_values_per_colum(estimates: pd.DataFrame) -> pd.DataFrame:
     unique = []
     for column in estimates.columns.tolist():
