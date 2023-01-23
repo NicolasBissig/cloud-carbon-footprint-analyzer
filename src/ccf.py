@@ -1,11 +1,11 @@
 import pandas as pd
 import requests
 
-def request_estimates(start: str, end: str, ignore_cache = "false", group_by = "day", base_url = "http://localhost:4000/api") -> pd.DataFrame:
+def request_estimates(start: str, end: str, ignore_cache = "false", group_by = "day", base_url = "http://localhost:4000/api", raw = False) -> pd.DataFrame:
     url = f'{base_url}/footprint?start={start}&end={end}&ignoreCache={ignore_cache}&groupBy={group_by}&limit=50000&skip=0'
     response = requests.get(url)
     response.raise_for_status()
-    return load_estimates(response.text)
+    return load_estimates(response.text, raw = raw)
 
 def load_estimates(path_or_raw: str, raw = False) -> pd.DataFrame: 
     raw_estimates = pd.read_json(path_or_raw)
@@ -16,7 +16,8 @@ def load_estimates(path_or_raw: str, raw = False) -> pd.DataFrame:
     return prepare_estimates(raw_estimates)
 
 def prepare_estimates(estimates: pd.DataFrame) -> pd.DataFrame:
-    exploded = estimates.explode('serviceEstimates', ignore_index=True)
+    deduplicated = estimates.drop_duplicates(["timestamp"])
+    exploded = deduplicated.explode('serviceEstimates', ignore_index=True)
     normalized = exploded.join(pd.json_normalize(exploded['serviceEstimates']))
     normalized = normalized.drop('serviceEstimates', axis='columns')
     return normalized
