@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 
 def request_estimates(start: str, end: str, ignore_cache = "false", group_by = "day", base_url = "http://localhost:4000/api", raw = False) -> pd.DataFrame:
-    url = f'{base_url}/footprint?start={start}&end={end}&ignoreCache={ignore_cache}&groupBy={group_by}&limit=50000&skip=0'
+    url = f'{base_url}/footprint?start={start}&end={end}&ignoreCache={ignore_cache}&groupBy={group_by}&limit=500000&skip=0'
     response = requests.get(url)
     response.raise_for_status()
     return load_estimates(response.text, raw = raw)
