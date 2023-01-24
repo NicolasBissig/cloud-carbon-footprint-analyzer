@@ -39,6 +39,6 @@ def sum_columns(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(df.sum(axis=0, numeric_only=True))
 
 def sum_per_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    summed = df.groupby([column]).sum(numeric_only=True)
+    summed = df.groupby([column], dropna=False).sum(numeric_only=True)
     summed = summed.sort_values(by=['kilowattHours', 'co2e', 'cost'], ascending=False)
     return summed
