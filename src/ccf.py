@@ -1,6 +1,8 @@
 import pandas as pd
 import requests
 
+from typing import List
+
 def request_estimates(start: str, end: str, ignore_cache = "false", group_by = "day", base_url = "http://localhost:4000/api", raw = False) -> pd.DataFrame:
     url = f'{base_url}/footprint?start={start}&end={end}&ignoreCache={ignore_cache}&groupBy={group_by}&limit=500000&skip=0'
     response = requests.get(url)
@@ -22,8 +24,8 @@ def prepare_estimates(estimates: pd.DataFrame) -> pd.DataFrame:
     normalized = normalized.drop('serviceEstimates', axis='columns')
     return normalized
 
-def filter_estimates(estimates: pd.DataFrame, column: str, value) -> pd.DataFrame:
-    return estimates[estimates[column] == value]
+def filter_estimates(estimates: pd.DataFrame, column: str, values: List[str]) -> pd.DataFrame:
+    return estimates[estimates[column].isin(values)]
 
 def unique_values_per_colum(estimates: pd.DataFrame) -> pd.DataFrame:
     unique = []
