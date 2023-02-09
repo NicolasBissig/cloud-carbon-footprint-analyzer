@@ -24,6 +24,10 @@ def prepare_estimates(estimates: pd.DataFrame) -> pd.DataFrame:
     normalized = normalized.drop('serviceEstimates', axis='columns')
     return normalized
 
+def normalize_column(estimates: pd.DataFrame, column: str) -> pd.DataFrame:
+    estimates[column] = estimates[column].str.lower()
+    return estimates
+
 def filter_estimates(estimates: pd.DataFrame, column: str, values: List[str]) -> pd.DataFrame:
     return estimates[estimates[column].isin(values)]
 
