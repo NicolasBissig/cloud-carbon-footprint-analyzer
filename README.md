@@ -1,10 +1,5 @@
 # cloud-carbon-footprint-analyzer
 
-[![](https://img.shields.io/badge/Report-Latest-green)](https://gitlab.device-insight.com/nbi/ccf-runner/-/jobs/artifacts/main/file/cloud-carbon-footprint-analyzer/report.html?job=report)
-
-[![](https://img.shields.io/badge/Data-Latest-green)](https://gitlab.device-insight.com/nbi/ccf-runner/-/jobs/artifacts/main/file/cloud-carbon-footprint/packages/cli/estimates.cache.day.json?job=estimate)
-
-
 Jupyter notebooks for quick analysis and visualization of cloud-carbon-footprint data
 
 ## requirements & installation
