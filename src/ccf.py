@@ -22,14 +22,17 @@ def prepare_estimates(estimates: pd.DataFrame) -> pd.DataFrame:
     exploded = deduplicated.explode('serviceEstimates', ignore_index=True)
     normalized = exploded.join(pd.json_normalize(exploded['serviceEstimates']))
     normalized = normalized.drop('serviceEstimates', axis='columns')
-    return normalized
+    intensity = calculate_intensity(normalized)
+    return intensity
 
 def normalize_column(estimates: pd.DataFrame, column: str) -> pd.DataFrame:
     estimates[column] = estimates[column].str.lower()
     return estimates
 
 def filter_estimates(estimates: pd.DataFrame, column: str, values: List[str]) -> pd.DataFrame:
-    return estimates[estimates[column].isin(values)]
+    filtered = estimates[estimates[column].isin(values)]
+    filtered = calculate_intensity(filtered)
+    return filtered
 
 def unique_values_per_colum(estimates: pd.DataFrame) -> pd.DataFrame:
     unique = []
@@ -48,4 +51,11 @@ def sum_per_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
     summed = df.groupby([column], dropna=False).sum(numeric_only=True)
     summed = summed.sort_values(by=['kilowattHours', 'co2e', 'cost'], ascending=False)
     summed = summed.reset_index()
+    summed = calculate_intensity(summed)
     return summed
+
+def calculate_intensity(estimates: pd.DataFrame) -> pd.DataFrame:
+    estimates = estimates.drop(['kWh / $'], axis=1, errors='ignore')
+    estimates['kWh / $'] = estimates['kilowattHours'] / estimates['cost']
+    estimates['kWh / $'].fillna(0, inplace=True)
+    return estimates
